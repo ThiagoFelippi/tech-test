@@ -7,6 +7,7 @@ Terraform setup for an EKS cluster with Karpenter autoscaling. Supports x86 and 
 - A dedicated **VPC** with public/private subnets across 3 AZs
 - An **EKS 1.32** cluster with a small x86 system node group (`m7i.large`) for running cluster components
 - **Karpenter** configured to provision workload nodes on-demand — both architectures, Spot preferred
+- **AWS Load Balancer Controller** to provision ALBs directly from Kubernetes Ingress resources
 
 ## Quick Start
 
@@ -120,6 +121,7 @@ terraform/
 │   └── eks-karpenter/              # Reusable EKS + Karpenter module
 │       ├── main.tf                 #   EKS cluster, addons, system nodes
 │       ├── karpenter.tf            #   Karpenter IAM, controller, resource deployment
+│       ├── aws-lb-controller.tf    #   AWS Load Balancer Controller (IAM + Helm)
 │       ├── variables.tf
 │       ├── outputs.tf
 │       └── versions.tf
@@ -131,7 +133,9 @@ terraform/
 
 ## Design Decisions
 
-**x86 system nodes** — The system node group runs CoreDNS, kube-proxy, vpc-cni, and Karpenter itself. x86 (`m7i.large`) is the safest default for these components. Graviton is available for workload nodes through Karpenter.
+**x86 system nodes** — The system node group runs CoreDNS, kube-proxy, vpc-cni, Karpenter, and the AWS LB Controller. x86 (`m7i.large`) is the safest default for these components. Graviton is available for workload nodes through Karpenter.
+
+**AWS Load Balancer Controller via Helm** — There is no EKS managed addon for the LB Controller. It's installed via Helm with a Pod Identity IAM role for ALB/NLB provisioning. An `aws-ia/eks-blueprints-addons` module exists as an alternative, but it pulls in a large dependency and defaults to IRSA.
 
 **Single NodePool for both architectures** — Giving Karpenter access to both x86 and arm64 maximizes the instance pool for bin-packing and Spot availability. Developers choose their architecture via `nodeSelector`.
 

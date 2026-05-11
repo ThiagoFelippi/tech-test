@@ -11,7 +11,7 @@ locals {
 
 module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
-  version = "~> 5.17"
+  version = "~> 6.6"
 
   name = "${var.cluster_name}-vpc"
   cidr = var.vpc_cidr
@@ -45,10 +45,10 @@ module "vpc" {
 module "eks_karpenter" {
   source = "./modules/eks-karpenter"
 
-  cluster_name      = var.cluster_name
-  cluster_version   = var.cluster_version
-  vpc_id            = module.vpc.vpc_id
-  subnet_ids        = module.vpc.private_subnets
+  cluster_name                   = var.cluster_name
+  cluster_version                = var.cluster_version
+  vpc_id                         = module.vpc.vpc_id
+  subnet_ids                     = module.vpc.private_subnets
   karpenter_version              = var.karpenter_version
   karpenter_resources_chart_path = "${path.module}/karpenter-resources"
 

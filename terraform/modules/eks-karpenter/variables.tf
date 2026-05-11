@@ -6,7 +6,7 @@ variable "cluster_name" {
 variable "cluster_version" {
   description = "Kubernetes version for the EKS cluster"
   type        = string
-  default     = "1.32"
+  default     = "1.34"
 }
 
 variable "vpc_id" {
@@ -23,6 +23,12 @@ variable "karpenter_version" {
   description = "Karpenter Helm chart version"
   type        = string
   default     = "1.1.1"
+}
+
+variable "aws_lb_controller_version" {
+  description = "AWS Load Balancer Controller Helm chart version"
+  type        = string
+  default     = "1.12.0"
 }
 
 variable "karpenter_resources_chart_path" {
