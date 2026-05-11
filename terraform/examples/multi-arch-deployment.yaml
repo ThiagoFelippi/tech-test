@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-multi-arch
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: nginx-multi-arch
+  template:
+    metadata:
+      labels:
+        app: nginx-multi-arch
+    spec:
+      containers:
+        - name: nginx
+          image: public.ecr.aws/nginx/nginx:latest
+          resources:
+            requests:
+              cpu: "500m"
+              memory: "128Mi"

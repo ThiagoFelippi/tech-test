@@ -1,0 +1,13 @@
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.backup
+*.tfplan
+.terraform.lock.hcl
+
+# Environment variables / secrets
+*.tfvars
+!*.tfvars.example
+
+# OS
+.DS_Store
